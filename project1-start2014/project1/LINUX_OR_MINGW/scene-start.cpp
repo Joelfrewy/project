@@ -318,7 +318,7 @@ void drawMesh(SceneObject sceneObj) {
     // in the sceneObj structure (see near the top of the program).
 
     mat4 model = Translate(sceneObj.loc) * Scale(sceneObj.scale);
-
+	
 
     // Set the model-view matrix for the shaders
     glUniformMatrix4fv( modelViewU, 1, GL_TRUE, view * model );
@@ -343,10 +343,8 @@ display( void )
 // Set the view matrix.  To start with this just moves the camera backwards.  You'll need to
 // add appropriate rotations.
 
-
-
     view = Translate(0.0, 0.0, -viewDist);
-
+	view = view * RotateX(camRotUpAndOverDeg) * RotateY(camRotSidewaysDeg);
 
     SceneObject lightObj1 = sceneObjs[1]; 
     vec4 lightPosition = view * lightObj1.loc ;
