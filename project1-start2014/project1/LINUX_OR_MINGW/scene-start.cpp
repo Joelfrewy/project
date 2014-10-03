@@ -25,7 +25,7 @@ GLuint shaderProgram; // The number identifying the GLSL shader program
 GLuint vPosition, vNormal, vTexCoord; // IDs for vshader input vars (from glGetAttribLocation)
 GLuint projectionU, modelViewU; // IDs for uniform variables (from glGetUniformLocation)
 
-static float viewDist = 1.5; // Distance from the camera to the centre of the scene
+static float viewDist = 15; // Distance from the camera to the centre of the scene
 static float camRotSidewaysDeg=0; // rotates the camera sideways around the centre
 static float camRotUpAndOverDeg=20; // rotates the camera up and over the centre.
 
@@ -536,15 +536,15 @@ void reshape( int width, int height ) {
     //   - when the width is less than the height, the view should adjust so that the same part
     //     of the scene is visible across the width of the window.
 
-    GLfloat nearDist = 0.2;
+    GLfloat nearDist = 0.01;
 	if(height >= width){
 		projection = Frustum(-nearDist, nearDist,
                          -nearDist*(float)height/(float)width, nearDist*(float)height/(float)width,
-                         nearDist, 100.0);
+                         0.2, 100);
 	} else {
 		projection = Frustum(-nearDist*(float)width/(float)height, nearDist*(float)width/(float)height,
                          -nearDist, nearDist,
-                         nearDist, 100.0);
+                         0.2, 100);
 	}
 
 }
