@@ -244,6 +244,12 @@ static void addObject(int id) {
   glutPostRedisplay();
 }
 
+static void deleteObject() {
+
+  toolObj = currObject = nObjects--;
+  glutPostRedisplay();
+}
+
 // ------ The init function
 
 void init( void )
@@ -479,6 +485,7 @@ static void mainmenu(int id) {
         setToolCallbacks(adjustAngleYX, mat2(400, 0, 0, -400),
                          adjustAngleZTexscale, mat2(400, 0, 0, 15) );
     }
+	if(id == 30) deleteObject();
     if(id == 99) exit(0);
 }
 
@@ -501,6 +508,7 @@ static void makeMenu() {
   glutCreateMenu(mainmenu);
   glutAddMenuEntry("Rotate/Move Camera",50);
   glutAddSubMenu("Add object", objectId);
+  glutAddMenuEntry("Delete", 30);
   glutAddMenuEntry("Position/Scale", 41);
   glutAddMenuEntry("Rotation/Texture Scale", 55);
   glutAddSubMenu("Material", materialMenuId);
