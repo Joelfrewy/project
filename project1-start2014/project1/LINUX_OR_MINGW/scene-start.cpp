@@ -54,7 +54,9 @@ GLuint textureIDs[numTextures]; // Stores the IDs returned by glGenTextures
 // For each object in a scene we store the following
 // Note: the following is exactly what the sample solution uses, you can do things differently if you want.
 typedef struct {
+	vec4 rootLoc;
     vec4 loc;
+	float startTime;
     float scale;
     float angles[3]; // rotations around X, Y and Z axes.
     float diffuse, specular, ambient; // Amount of each light component
@@ -63,6 +65,7 @@ typedef struct {
     float brightness; // Multiplies all colours
     int meshId;
     int texId;
+	int motion;
     float texScale;
 } SceneObject;
 
@@ -201,7 +204,7 @@ static void adjustcamSideUp(vec2 su)
   { camRotSidewaysDeg+=su[0]; camRotUpAndOverDeg+=su[1]; }
   
 static void adjustLocXZ(vec2 xz) 
-  { sceneObjs[toolObj].loc[0]+=xz[0];  sceneObjs[toolObj].loc[2]+=xz[1]; }
+  { sceneObjs[toolObj].rootLoc[0]+=xz[0];  sceneObjs[toolObj].rootLoc[2]+=xz[1]; }
 
 static void adjustScaleY(vec2 sy) 
   { sceneObjs[toolObj].scale+=sy[0];  sceneObjs[toolObj].loc[1]+=sy[1]; }
@@ -217,14 +220,18 @@ static void doRotate() {
 static void addObject(int id) {
 
   vec2 currPos = currMouseXYworld(camRotSidewaysDeg);
-  sceneObjs[nObjects].loc[0] = currPos[0];
-  sceneObjs[nObjects].loc[1] = 0.0;
-  sceneObjs[nObjects].loc[2] = currPos[1];
-  sceneObjs[nObjects].loc[3] = 1.0;
+  sceneObjs[nObjects].rootLoc[0] = currPos[0];
+  sceneObjs[nObjects].rootLoc[1] = 0.0;
+  sceneObjs[nObjects].rootLoc[2] = currPos[1];
+  sceneObjs[nObjects].rootLoc[3] = 1.0;
 
   if(id!=0 && id!=55)
       sceneObjs[nObjects].scale = 0.005;
 
+  sceneObjs[nObjects].startTime = 0.0;
+  sceneObjs[nObjects].loc = sceneObjs[nObjects].rootLoc;
+  sceneObjs[nObjects].motion = 0;
+  
   sceneObjs[nObjects].rgb[0] = 0.7; sceneObjs[nObjects].rgb[1] = 0.7;
   sceneObjs[nObjects].rgb[2] = 0.7; sceneObjs[nObjects].brightness = 1.0;
 
@@ -280,7 +287,7 @@ void init( void )
 
     // Objects 0, and 1 are the ground and the first light.
     addObject(0); // Square for the ground
-    sceneObjs[0].loc = vec4(0.0, 0.0, 0.0, 1.0);
+    sceneObjs[0].rootLoc = vec4(0.0, 0.0, 0.0, 1.0);
     sceneObjs[0].scale = 10.0;
     sceneObjs[0].angles[0] = 90.0; // Rotate it.
     sceneObjs[0].texScale = 5.0; // Repeat the texture.
@@ -452,6 +459,16 @@ static void adjustSpecularShine(vec2 ss)
     else { printf("Error in lightMenu\n"); exit(1); }
 }
 
+static void motionMenu(int id) {
+    deactivateTool();
+    if(id == 100 || id == 101 || id == 102 || id == 103) {
+		sceneObjs[toolObj].startTime = glutGet(GLUT_ELAPSED_TIME);
+		sceneObjs[toolObj].rootLoc = sceneObjs[toolObj].loc;
+		sceneObjs[toolObj].motion = id - 100;
+	}
+    else { printf("Error in motionMenu\n"); exit(1); }
+}
+
 static int createArrayMenu(int size, const char menuEntries[][128], void(*menuFn)(int)) {
     int nSubMenus = (size-1)/10 + 1;
     int subMenus[nSubMenus];
@@ -529,6 +546,12 @@ static void makeMenu() {
   glutAddMenuEntry("Move Light 2",80);
   glutAddMenuEntry("R/G/B/All Light 2",81);
 
+  int motionMenuId = glutCreateMenu(motionMenu);
+  glutAddMenuEntry("none",100);
+  glutAddMenuEntry("circle",101);
+  glutAddMenuEntry("square",102);
+  glutAddMenuEntry("zig-zag",103);
+  
   glutCreateMenu(mainmenu);
   glutAddMenuEntry("Rotate/Move Camera",50);
   glutAddSubMenu("Add object", objectId);
@@ -536,6 +559,7 @@ static void makeMenu() {
   glutAddMenuEntry("Position/Scale", 41);
   glutAddMenuEntry("Rotation/Texture Scale", 55);
   glutAddSubMenu("Material", materialMenuId);
+  glutAddSubMenu("Motion", motionMenuId);
   glutAddSubMenu("Texture",texMenuId);
   glutAddSubMenu("Ground Texture",groundMenuId);
   glutAddSubMenu("Lights",lightMenuId);
@@ -558,8 +582,54 @@ keyboard( unsigned char key, int x, int y )
 
 //----------------------------------------------------------------------------
 
+void move( void ) {
+	int time = glutGet(GLUT_ELAPSED_TIME);
+	for(int i = 1; i< nObjects ;i++){
+		if(sceneObjs[i].motion == 0){
+			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+		}
+		else if(sceneObjs[i].motion == 1){
+			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0] + cos((time-sceneObjs[i].startTime)/1000) - 1;
+			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2] + sin((time-sceneObjs[i].startTime)/1000);
+		}
+		else if(sceneObjs[i].motion == 2){
+			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
+			if(timeLoop < 3){
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].rootLoc[0] +=0.01;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			} else if(timeLoop >= 3 && timeLoop < 6){
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].rootLoc[2] +=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else if(timeLoop >= 9){
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].rootLoc[2] -=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else{
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].rootLoc[0] -=0.01;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			}
+		}
+		else if(sceneObjs[i].motion == 3){
+			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 4;
+			sceneObjs[i].rootLoc[0] +=0.003;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			if(timeLoop < 2){
+				sceneObjs[i].rootLoc[2] +=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else{
+				sceneObjs[i].rootLoc[2] -=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			}
+		}
+	}
+}
 
 void idle( void ) {
+  move();
   glutPostRedisplay();
 }
 
