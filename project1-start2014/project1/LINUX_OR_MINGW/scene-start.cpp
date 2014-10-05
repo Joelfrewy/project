@@ -363,7 +363,8 @@ display( void )
     vec4 lightPosition = view * lightObj1.loc ;
 
 	SceneObject lightObj2 = sceneObjs[2]; 
-    vec4 light2Position = view * lightObj2.loc ;
+    vec4 light2Position = lightObj2.loc ;
+
 	
     glUniform4fv( glGetUniformLocation(shaderProgram, "LightPosition"), 1, lightPosition); CheckError();
 	glUniform4fv( glGetUniformLocation(shaderProgram, "Light2Position"), 1, light2Position); CheckError();
@@ -371,10 +372,14 @@ display( void )
     for(int i=0; i<nObjects; i++) {
         SceneObject so = sceneObjs[i];
 
-        vec3 rgb = so.rgb * lightObj1.rgb * so.brightness * lightObj1.brightness * 2.0 * lightObj2.rgb * lightObj2.brightness;
-        glUniform3fv( glGetUniformLocation(shaderProgram, "AmbientProduct"), 1, so.ambient * rgb ); CheckError();
+        vec3 rgb = so.rgb * lightObj1.rgb * so.brightness * lightObj1.brightness * 2.0;
+        vec3 rgb2 = so.rgb * lightObj2.rgb * so.brightness * lightObj2.brightness * 2.0;
+		glUniform3fv( glGetUniformLocation(shaderProgram, "AmbientProduct"), 1, so.ambient * rgb ); CheckError();
         glUniform3fv( glGetUniformLocation(shaderProgram, "DiffuseProduct"), 1, so.diffuse * rgb );
         glUniform3fv( glGetUniformLocation(shaderProgram, "SpecularProduct"), 1, so.specular * rgb );
+		glUniform3fv( glGetUniformLocation(shaderProgram, "AmbientProduct2"), 1, so.ambient * rgb2 ); CheckError();
+        glUniform3fv( glGetUniformLocation(shaderProgram, "DiffuseProduct2"), 1, so.diffuse * rgb2 );
+        glUniform3fv( glGetUniformLocation(shaderProgram, "SpecularProduct2"), 1, so.specular * rgb2 );
         glUniform1f( glGetUniformLocation(shaderProgram, "Shininess"), so.shine ); CheckError();
 
         drawMesh(sceneObjs[i]);
@@ -444,7 +449,6 @@ static void adjustSpecularShine(vec2 ss)
         setToolCallbacks(adjustRedGreen, mat2(1.0, 0, 0, 1.0),
                          adjustBlueBrightness, mat2(1.0, 0, 0, 1.0) );
     }
-
     else { printf("Error in lightMenu\n"); exit(1); }
 }
 
