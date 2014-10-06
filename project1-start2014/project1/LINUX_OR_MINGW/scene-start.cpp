@@ -251,6 +251,19 @@ static void addObject(int id) {
   glutPostRedisplay();
 }
 
+static void duplicateObject() {
+	vec2 currPos = currMouseXYworld(camRotSidewaysDeg);
+	sceneObjs[nObjects] = sceneObjs[nObjects-1];
+	sceneObjs[nObjects].loc[0] = currPos[0];
+	sceneObjs[nObjects].loc[1] = 0.0;
+	sceneObjs[nObjects].loc[2] = currPos[1];
+	sceneObjs[nObjects].loc[3] = 1.0;
+	toolObj = currObject = nObjects++;
+	setToolCallbacks(adjustLocXZ, camRotZ(),
+    adjustScaleY, mat2(0.05, 0, 0, 10.0) );
+	glutPostRedisplay();
+}
+
 static void deleteObject() {
 
   toolObj = currObject = nObjects--;
@@ -499,7 +512,7 @@ static void materialMenu(int id) {
   if(id==20) {
 	 toolObj = currObject;
      setToolCallbacks(adjustAmbientDiffuse, mat2(1, 0, 0, 1),
-                      adjustSpecularShine, mat2(1, 0, 0, 1) );
+                      adjustSpecularShine, mat2(1, 0, 0, 10) );
   }
   // You'll need to fill in the remaining menu items here.					    
 					  
@@ -527,6 +540,7 @@ static void mainmenu(int id) {
                          adjustAngleZTexscale, mat2(400, 0, 0, 15) );
     }
 	if(id == 30) deleteObject();
+	if(id == 90) duplicateObject();
     if(id == 99) exit(0);
 }
 
@@ -555,6 +569,7 @@ static void makeMenu() {
   glutCreateMenu(mainmenu);
   glutAddMenuEntry("Rotate/Move Camera",50);
   glutAddSubMenu("Add object", objectId);
+  glutAddMenuEntry("Duplicate", 90);
   glutAddMenuEntry("Delete", 30);
   glutAddMenuEntry("Position/Scale", 41);
   glutAddMenuEntry("Rotation/Texture Scale", 55);
