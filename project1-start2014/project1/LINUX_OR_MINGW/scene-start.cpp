@@ -307,12 +307,14 @@ void init( void )
 
     addObject(55); // Sphere for the first light
     sceneObjs[1].loc = vec4(2.0, 1.0, 1.0, 1.0);
+	sceneObjs[1].rootLoc = vec4(2.0, 1.0, 1.0, 1.0);
     sceneObjs[1].scale = 0.1;
     sceneObjs[1].texId = 0; // Plain texture
     sceneObjs[1].brightness = 0.2; // The light's brightness is 5 times this (below).
 
 	addObject(55); // Sphere for the first light
-    sceneObjs[2].loc = vec4(2.0, 1.0, 1.0, 1.0);
+    sceneObjs[2].loc = vec4(-2.0, 1.0, -1.0, 1.0);
+	sceneObjs[2].rootLoc = vec4(-2.0, 1.0, -1.0, 1.0);
     sceneObjs[2].scale = 0.1;
     sceneObjs[2].texId = 0; // Plain texture
     sceneObjs[2].brightness = 0.2; // The light's brightness is 5 times this (below).
@@ -364,10 +366,56 @@ void drawMesh(SceneObject sceneObj) {
     glDrawElements(GL_TRIANGLES, meshes[sceneObj.meshId]->mNumFaces * 3, GL_UNSIGNED_INT, NULL); CheckError();
 }
 
+void move( void ) {
+	int time = glutGet(GLUT_ELAPSED_TIME);
+	for(int i = 1; i< nObjects ;i++){
+		if(sceneObjs[i].motion == 0){
+			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+		}
+		else if(sceneObjs[i].motion == 1){
+			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0] + cos((time-sceneObjs[i].startTime)/1000) - 1;
+			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2] + sin((time-sceneObjs[i].startTime)/1000);
+		}
+		else if(sceneObjs[i].motion == 2){
+			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
+			if(timeLoop < 3){
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].rootLoc[0] +=0.001;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			} else if(timeLoop >= 3 && timeLoop < 6){
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].rootLoc[2] +=0.001;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else if(timeLoop >= 9){
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].rootLoc[2] -=0.001;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else{
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].rootLoc[0] -=0.001;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			}
+		}
+		else if(sceneObjs[i].motion == 3){
+			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 4;
+			sceneObjs[i].rootLoc[0] +=0.003;
+				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+			if(timeLoop < 2){
+				sceneObjs[i].rootLoc[2] +=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else{
+				sceneObjs[i].rootLoc[2] -=0.01;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			}
+		}
+	}
+}
 
 void
 display( void )
 {
+	move();
     numDisplayCalls++;
 
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -597,54 +645,9 @@ keyboard( unsigned char key, int x, int y )
 
 //----------------------------------------------------------------------------
 
-void move( void ) {
-	int time = glutGet(GLUT_ELAPSED_TIME);
-	for(int i = 1; i< nObjects ;i++){
-		if(sceneObjs[i].motion == 0){
-			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-		}
-		else if(sceneObjs[i].motion == 1){
-			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0] + cos((time-sceneObjs[i].startTime)/1000) - 1;
-			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2] + sin((time-sceneObjs[i].startTime)/1000);
-		}
-		else if(sceneObjs[i].motion == 2){
-			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
-			if(timeLoop < 3){
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-				sceneObjs[i].rootLoc[0] +=0.01;
-				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-			} else if(timeLoop >= 3 && timeLoop < 6){
-				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-				sceneObjs[i].rootLoc[2] +=0.01;
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-			} else if(timeLoop >= 9){
-				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-				sceneObjs[i].rootLoc[2] -=0.01;
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-			} else{
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-				sceneObjs[i].rootLoc[0] -=0.01;
-				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-			}
-		}
-		else if(sceneObjs[i].motion == 3){
-			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 4;
-			sceneObjs[i].rootLoc[0] +=0.003;
-				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-			if(timeLoop < 2){
-				sceneObjs[i].rootLoc[2] +=0.01;
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-			} else{
-				sceneObjs[i].rootLoc[2] -=0.01;
-				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-			}
-		}
-	}
-}
+
 
 void idle( void ) {
-  move();
   glutPostRedisplay();
 }
 
