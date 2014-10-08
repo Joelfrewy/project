@@ -252,15 +252,11 @@ static void addObject(int id) {
 }
 
 static void duplicateObject() {
-	vec2 currPos = currMouseXYworld(camRotSidewaysDeg);
 	sceneObjs[nObjects] = sceneObjs[nObjects-1];
-	sceneObjs[nObjects].loc[0] = currPos[0];
-	sceneObjs[nObjects].loc[1] = 0.0;
-	sceneObjs[nObjects].loc[2] = currPos[1];
-	sceneObjs[nObjects].loc[3] = 1.0;
+	sceneObjs[nObjects].loc[0] += 1;
+	sceneObjs[nObjects].loc[2] += 1;
+	sceneObjs[nObjects].rootLoc = sceneObjs[nObjects].loc;
 	toolObj = currObject = nObjects++;
-	setToolCallbacks(adjustLocXZ, camRotZ(),
-    adjustScaleY, mat2(0.05, 0, 0, 10.0) );
 	glutPostRedisplay();
 }
 
@@ -381,19 +377,19 @@ void move( void ) {
 			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
 			if(timeLoop < 3){
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-				sceneObjs[i].rootLoc[0] +=0.001;
+				sceneObjs[i].rootLoc[0] +=0.01;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 			} else if(timeLoop >= 3 && timeLoop < 6){
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-				sceneObjs[i].rootLoc[2] +=0.001;
+				sceneObjs[i].rootLoc[2] +=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
 			} else if(timeLoop >= 9){
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
-				sceneObjs[i].rootLoc[2] -=0.001;
+				sceneObjs[i].rootLoc[2] -=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
 			} else{
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-				sceneObjs[i].rootLoc[0] -=0.001;
+				sceneObjs[i].rootLoc[0] -=0.01;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 			}
 		}
