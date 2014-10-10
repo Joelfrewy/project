@@ -34,11 +34,11 @@ main()
 
     float Kd = max( dot(L, N), 0.0 );
 	float Kd2 = max( dot(L2, N), 0.0 );
-    vec3  diffuse = Kd * DiffuseProduct /distance + Kd2 * DiffuseProduct2;
+    vec3  diffuse = Kd * DiffuseProduct / distance / distance + Kd2 * DiffuseProduct2;
 
 	float Ks = pow( max(dot(N, H), 0.0), Shininess );
     float Ks2 = pow( max(dot(N, H2), 0.0), Shininess );
-    vec3  specular = Ks * SpecularProduct /distance + Ks2 * SpecularProduct2;
+    vec3  specular = Ks * SpecularProduct /distance / distance + Ks2 * SpecularProduct2;
     if( dot(L, N) < 0.0 || dot(L2, N) < 0.0 ) {
 	specular = vec3(0.0, 0.0, 0.0);
     } 
