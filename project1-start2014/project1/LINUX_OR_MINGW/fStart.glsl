@@ -11,6 +11,7 @@ uniform float Shininess;
 uniform vec4 LightPosition;
 uniform vec4 Light2Position;
 uniform sampler2D texture;
+uniform float texScale;
 
 void
 main()
@@ -51,5 +52,5 @@ main()
 	scolor.rgb = specular;
 	color.a = 1.0;
 	
-    fColor = color * texture2D( texture, texCoord * 2.0 ) + scolor;
+    fColor = color * texture2D( texture, texCoord * 2.0 * texScale ) + scolor;
 }
