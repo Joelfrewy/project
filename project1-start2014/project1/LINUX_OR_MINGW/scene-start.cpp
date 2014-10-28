@@ -58,6 +58,8 @@ GLuint vBoneIDs, vBoneWeights, uBoneTransforms;
 // For each object in a scene we store the following
 // Note: the following is exactly what the sample solution uses, you can do things differently if you want.
 typedef struct {
+	float duration;
+	float speed;
 	vec4 rootLoc;
     vec4 loc;
 	float startTime;
@@ -249,14 +251,16 @@ static void addObject(int id) {
   sceneObjs[nObjects].rootLoc[0] = currPos[0];
   sceneObjs[nObjects].rootLoc[1] = 0.0;
   sceneObjs[nObjects].rootLoc[2] = currPos[1];
-  sceneObjs[nObjects].rootLoc[3] = 1.0;
-
+  sceneObjs[nObjects].rootLoc[3] = 1.0;  
+  
   if(id!=0 && id!=55)
       sceneObjs[nObjects].scale = 0.005;
-
+	sceneObjs[nObjects].duration = 2.0;
+	sceneObjs[nObjects].speed = 0.01;
   sceneObjs[nObjects].startTime = 0.0;
   sceneObjs[nObjects].loc = sceneObjs[nObjects].rootLoc;
-  sceneObjs[nObjects].motion = 0;
+  if(id == 56){sceneObjs[nObjects].motion = 1;}
+  else{sceneObjs[nObjects].motion = 0;}
   
   sceneObjs[nObjects].rgb[0] = 0.7; sceneObjs[nObjects].rgb[1] = 0.7;
   sceneObjs[nObjects].rgb[2] = 0.7; sceneObjs[nObjects].brightness = 1.0;
@@ -405,20 +409,35 @@ void drawMesh(SceneObject sceneObj) {
 void move( void ) {
 	int time = glutGet(GLUT_ELAPSED_TIME);
 	for(int i = 1; i< nObjects ;i++){
+		if(sceneObjs[i].speed <= 0){sceneObjs[i].speed =0;}
+		if(sceneObjs[i].duration <= 0.5){sceneObjs[i].duration =0.5;}
 		if(sceneObjs[i].motion == 0){
 			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
 		}
 		else if(sceneObjs[i].motion == 1){
+			
+			float timeLoop = (time - sceneObjs[i].startTime)/1000;
+			while(timeLoop > sceneObjs[i].duration)
+			{timeLoop -= sceneObjs[i].duration;}
+			if(timeLoop < sceneObjs[i].duration/2){
+				sceneObjs[i].rootLoc[2] += sceneObjs[i].speed;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			} else{
+				sceneObjs[i].rootLoc[2] -= sceneObjs[i].speed;
+				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+			}
+		}
+		else if(sceneObjs[i].motion == 2){
 			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0] + cos((time-sceneObjs[i].startTime)/1000) - 1;
 			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2] + sin((time-sceneObjs[i].startTime)/1000);
 			sceneObjs[i].angles[1] = -((time-sceneObjs[i].startTime)/1000*180/3.14159265358979323846);
 		}
-		else if(sceneObjs[i].motion == 2){
+		else if(sceneObjs[i].motion == 3){
 			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
 			if(timeLoop < 3){
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
-				sceneObjs[i].rootLoc[0] +=0.01;
+				sceneObjs[i].rootLoc[0] += 0.01;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 				sceneObjs[i].angles[1] = 0;
 			} else if(timeLoop >= 3 && timeLoop < 6){
@@ -438,7 +457,7 @@ void move( void ) {
 				sceneObjs[i].angles[1] = 180;
 			}
 		}
-		else if(sceneObjs[i].motion == 3){
+		else if(sceneObjs[i].motion == 4){
 			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 4;
 			sceneObjs[i].rootLoc[0] +=0.005;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
@@ -537,7 +556,9 @@ static void adjustAmbientDiffuse(vec2 ad)
 static void adjustSpecularShine(vec2 ss) 
   { sceneObjs[toolObj].specular+=ss[0]; sceneObjs[toolObj].shine+=ss[1]; } 
  
-  
+static void adjustMotion(vec2 by) 
+  { sceneObjs[toolObj].duration+=by[0]; sceneObjs[toolObj].speed+=by[1]; }
+ 
   static void lightMenu(int id) {
     deactivateTool();
     if(id == 70) {
@@ -565,7 +586,7 @@ static void adjustSpecularShine(vec2 ss)
 
 static void motionMenu(int id) {
     deactivateTool();
-    if(id == 100 || id == 101 || id == 102 || id == 103) {
+    if(id == 100 || id == 101 || id == 102 || id == 103 || id == 104) {
 		sceneObjs[toolObj].startTime = glutGet(GLUT_ELAPSED_TIME);
 		sceneObjs[toolObj].rootLoc = sceneObjs[toolObj].loc;
 		sceneObjs[toolObj].motion = id - 100;
@@ -624,6 +645,11 @@ static void mainmenu(int id) {
         setToolCallbacks(adjustLocXZ, camRotZ(),
                          adjustScaleY, mat2(0.05, 0, 0, 10) );
     }
+	if(id == 45 && currObject>=0) {
+	    toolObj=currObject;
+        setToolCallbacks(adjustMotion, mat2(1,0,0,1),
+                      adjustMotion, mat2(1,0,0,1) );
+    }
     if(id == 50)
         doRotate();
     if(id == 55 && currObject>=0) {
@@ -653,9 +679,10 @@ static void makeMenu() {
 
   int motionMenuId = glutCreateMenu(motionMenu);
   glutAddMenuEntry("none",100);
-  glutAddMenuEntry("circle",101);
-  glutAddMenuEntry("square",102);
-  glutAddMenuEntry("zig-zag",103);
+  glutAddMenuEntry("line",101);
+  glutAddMenuEntry("circle",102);
+  glutAddMenuEntry("square",103);
+  glutAddMenuEntry("zig-zag",104);
   
   glutCreateMenu(mainmenu);
   glutAddMenuEntry("Rotate/Move Camera",50);
@@ -663,6 +690,7 @@ static void makeMenu() {
   glutAddMenuEntry("Duplicate", 90);
   glutAddMenuEntry("Delete", 30);
   glutAddMenuEntry("Position/Scale", 41);
+  glutAddMenuEntry("Walk Duration/Distance", 45);
   glutAddMenuEntry("Rotation/Texture Scale", 55);
   glutAddSubMenu("Material", materialMenuId);
   glutAddSubMenu("Motion", motionMenuId);
