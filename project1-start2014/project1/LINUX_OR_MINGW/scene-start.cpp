@@ -412,6 +412,7 @@ void move( void ) {
 		else if(sceneObjs[i].motion == 1){
 			sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0] + cos((time-sceneObjs[i].startTime)/1000) - 1;
 			sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2] + sin((time-sceneObjs[i].startTime)/1000);
+			sceneObjs[i].angles[1] = -((time-sceneObjs[i].startTime)/1000*180/3.14159265358979323846);
 		}
 		else if(sceneObjs[i].motion == 2){
 			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 12;
@@ -419,30 +420,36 @@ void move( void ) {
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
 				sceneObjs[i].rootLoc[0] +=0.01;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].angles[1] = 0;
 			} else if(timeLoop >= 3 && timeLoop < 6){
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 				sceneObjs[i].rootLoc[2] +=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].angles[1] = 270;
 			} else if(timeLoop >= 9){
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 				sceneObjs[i].rootLoc[2] -=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].angles[1] = 90;
 			} else{
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
 				sceneObjs[i].rootLoc[0] -=0.01;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
+				sceneObjs[i].angles[1] = 180;
 			}
 		}
 		else if(sceneObjs[i].motion == 3){
 			float timeLoop = ((int)(time - sceneObjs[i].startTime)/1000) % 4;
-			sceneObjs[i].rootLoc[0] +=0.003;
+			sceneObjs[i].rootLoc[0] +=0.005;
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
 			if(timeLoop < 2){
 				sceneObjs[i].rootLoc[2] +=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].angles[1] = 60;
 			} else{
 				sceneObjs[i].rootLoc[2] -=0.01;
 				sceneObjs[i].loc[2] = sceneObjs[i].rootLoc[2];
+				sceneObjs[i].angles[1] = 120;
 			}
 		}
 	}
