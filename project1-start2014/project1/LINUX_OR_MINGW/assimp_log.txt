@@ -1,41 +1,54 @@
-Info,  T6756: Load models-textures/model0.x
-Info,  T6756: Found a matching importer for this file format
-Info,  T6756: Import root directory is 'models-textures\'
-Info,  T6756: Entering post processing pipeline
-Info,  T6756: TriangulateProcess finished. All polygons have been triangulated.
-Info,  T6756: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
-Info,  T6756: CalcTangentsProcess finished. Tangents have been calculated
-Info,  T6756: JoinVerticesProcess finished | Verts in: 324 out: 100 | ~69.1%
-Info,  T6756: Cache relevant are 1 meshes (162 faces). Average output ACMR is 0.796296
-Info,  T6756: Leaving post processing pipeline
-Info,  T6756: Load models-textures/model55.x
-Info,  T6756: Found a matching importer for this file format
-Info,  T6756: Import root directory is 'models-textures\'
-Info,  T6756: Entering post processing pipeline
-Info,  T6756: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
-Info,  T6756: CalcTangentsProcess finished. Tangents have been calculated
-Info,  T6756: JoinVerticesProcess finished | Verts in: 240 out: 76 | ~68.3%
-Info,  T6756: Cache relevant are 1 meshes (80 faces). Average output ACMR is 0.950000
-Info,  T6756: Leaving post processing pipeline
-Info,  T6756: Load models-textures/model4.x
-Info,  T6756: Found a matching importer for this file format
-Info,  T6756: Import root directory is 'models-textures\'
-Info,  T6756: Entering post processing pipeline
-Info,  T6756: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
-Info,  T6756: CalcTangentsProcess finished. Tangents have been calculated
-Info,  T6756: JoinVerticesProcess finished | Verts in: 17100 out: 6181 | ~63.9%
-Info,  T6756: Cache relevant are 1 meshes (5700 faces). Average output ACMR is 1.176667
-Info,  T6756: Leaving post processing pipeline
-Info,  T6756: Load models-textures/model56.x
-Info,  T6756: Found a matching importer for this file format
-Info,  T6756: Import root directory is 'models-textures\'
-Info,  T6756: Entering post processing pipeline
-Info,  T6756: TriangulateProcess finished. All polygons have been triangulated.
-Info,  T6756: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
-Warn,  T6756: Simplified dummy tracks with just one key
+Info,  T6524: Load models-textures/model0.x
+Info,  T6524: Found a matching importer for this file format
+Info,  T6524: Import root directory is 'models-textures\'
+Info,  T6524: Entering post processing pipeline
+Info,  T6524: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T6524: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Info,  T6524: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T6524: JoinVerticesProcess finished | Verts in: 324 out: 100 | ~69.1%
+Info,  T6524: Cache relevant are 1 meshes (162 faces). Average output ACMR is 0.796296
+Info,  T6524: Leaving post processing pipeline
+Info,  T6524: Load models-textures/model55.x
+Info,  T6524: Found a matching importer for this file format
+Info,  T6524: Import root directory is 'models-textures\'
+Info,  T6524: Entering post processing pipeline
+Info,  T6524: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Info,  T6524: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T6524: JoinVerticesProcess finished | Verts in: 240 out: 76 | ~68.3%
+Info,  T6524: Cache relevant are 1 meshes (80 faces). Average output ACMR is 0.950000
+Info,  T6524: Leaving post processing pipeline
+Info,  T6524: Load models-textures/model12.x
+Info,  T6524: Found a matching importer for this file format
+Info,  T6524: Import root directory is 'models-textures\'
+Info,  T6524: Entering post processing pipeline
+Info,  T6524: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Info,  T6524: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T6524: JoinVerticesProcess finished | Verts in: 22050 out: 6342 | ~71.2%
+Info,  T6524: Cache relevant are 1 meshes (7350 faces). Average output ACMR is 1.007891
+Info,  T6524: Leaving post processing pipeline
+Info,  T6524: Load models-textures/model58.x
+Info,  T6524: Found a matching importer for this file format
+Info,  T6524: Import root directory is 'models-textures\'
+Info,  T6524: Entering post processing pipeline
+Info,  T6524: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T6524: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Warn,  T6524: Simplified dummy tracks with just one key
 Skipping one or more lines with the same contents
-Info,  T6756: CalcTangentsProcess finished. Tangents have been calculated
-Info,  T6756: JoinVerticesProcess finished | Verts in: 1440 out: 841 | ~41.6%
-Info,  T6756: Removed 29 weights. Input bones: 10. Output bones: 10
-Info,  T6756: Cache relevant are 1 meshes (720 faces). Average output ACMR is 1.168056
-Info,  T6756: Leaving post processing pipeline
+Info,  T6524: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T6524: JoinVerticesProcess finished | Verts in: 1440 out: 841 | ~41.6%
+Info,  T6524: Removed 29 weights. Input bones: 10. Output bones: 10
+Info,  T6524: Cache relevant are 1 meshes (720 faces). Average output ACMR is 1.168056
+Info,  T6524: Leaving post processing pipeline
+Info,  T6524: Load models-textures/model59.x
+Info,  T6524: Found a matching importer for this file format
+Info,  T6524: Import root directory is 'models-textures\'
+Info,  T6524: Entering post processing pipeline
+Info,  T6524: TriangulateProcess finished. All polygons have been triangulated.
+Info,  T6524: Points: 0, Lines: 0, Triangles: 1, Polygons: 0 (Meshes, X = removed)
+Warn,  T6524: Simplified dummy tracks with just one key
+Skipping one or more lines with the same contents
+Info,  T6524: CalcTangentsProcess finished. Tangents have been calculated
+Info,  T6524: JoinVerticesProcess finished | Verts in: 1440 out: 841 | ~41.6%
+Info,  T6524: Removed 29 weights. Input bones: 10. Output bones: 10
+Info,  T6524: Cache relevant are 1 meshes (720 faces). Average output ACMR is 1.168056
+Info,  T6524: Leaving post processing pipeline
