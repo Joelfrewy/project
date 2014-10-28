@@ -421,7 +421,7 @@ void move( void ) {
 			float dscalet = (sceneObjs[i].duration * 0.01)/sceneObjs[i].speed;
 			while(timeLoop > dscalet)
 			{timeLoop -= dscalet;}
-			if(timeLoop < dscalet/2){
+			if(timeLoop > dscalet/2){
 				sceneObjs[i].rootLoc[2] += (sceneObjs[i].speed * cos(sceneObjs[i].angles[1] *3.14159/180));
 				sceneObjs[i].rootLoc[0] += (sceneObjs[i].speed * sin(sceneObjs[i].angles[1] *3.14159/180));
 				sceneObjs[i].loc[0] = sceneObjs[i].rootLoc[0];
